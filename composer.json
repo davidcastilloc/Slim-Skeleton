@@ -23,6 +23,8 @@
     ],
     "require": {
         "php": "^7.4 || ^8.0",
+        "fpdf/fpdf": "^1.85",
+        "setasign/tfpdf": "1.33",
         "ext-json": "*",
         "monolog/monolog": "^2.9",
         "php-di/php-di": "^6.4",

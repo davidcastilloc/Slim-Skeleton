@@ -2,26 +2,49 @@
 
 declare(strict_types=1);
 
-use App\Application\Actions\User\ListUsersAction;
-use App\Application\Actions\User\ViewUserAction;
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
-use Slim\Interfaces\RouteCollectorProxyInterface as Group;
+use App\Application\Controller\Certificados\GenerarPdf;
+use App\Application\Repository\CertificationRepository;
+use App\Application\Entity\CertificationEntity;
 
 return function (App $app) {
-    $app->options('/{routes:.*}', function (Request $request, Response $response) {
-        // CORS Pre-Flight OPTIONS Request Handler
-        return $response;
+    $app->get('/', function ($request, $response, array $args) { 
+      
     });
 
-    $app->get('/', function (Request $request, Response $response) {
-        $response->getBody()->write('Hello world!');
-        return $response;
+    $app->get('/validar', function ($request, $response, array $args) {
+        $database = $this->get(PDO::class);
+        $db= New CertificationRepository($database);
+        $data = $request->getParsedBody();
+        $response->getBody()->write(
+            json_encode(
+                $db->checkAndGetCert(
+                    $data["id"])->toJson()));
+        return $response->withHeader('Content-Type', 'application/json');
     });
 
-    $app->group('/users', function (Group $group) {
-        $group->get('', ListUsersAction::class);
-        $group->get('/{id}', ViewUserAction::class);
+    $app->post('/generar', function($request, $response, array $args) {
+        $database = $this->get(PDO::class);
+        $generador = new GenerarPdf();
+        $data = $request->getParsedBody();
+        $db = new CertificationRepository($database);
+        $nombre_certificado = $db->checkAndGetCert(
+            $data["id"])->getNombre_completo();
+        $generador->generate($nombre_certificado);
+    });
+
+    $app->post('/crear', function($request, $response, array $args) {
+        $db = $this->get(PDO::class);
+        $data = $request->getParsedBody();
+        $r_certification = new CertificationRepository($db);
+        $e_certificado = new CertificationEntity();
+        $e_certificado->setCod_asistente($data["cod_asistente"]);
+        $e_certificado->setDocumento_identidad($data["documento_identidad"]);
+        $e_certificado->setNombre_completo($data["nombre_completo"]);
+        $e_certificado->setTipoParticipacion($data["tipo_participacion"]);
+        $e_certificado->setEventoId($data["evento_id"]);
+        $r_certification->createCert($e_certificado);
+        $response->getBody()->write(json_encode($e_certificado->toJson()));
+        return $response;
     });
 };
