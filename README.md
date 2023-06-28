@@ -1,42 +1,26 @@
-# Slim Framework 4 Skeleton Application
+# ASONAP API
+Sistema automatizado de gestion de certificados .
 
-[![Coverage Status](https://coveralls.io/repos/github/slimphp/Slim-Skeleton/badge.svg?branch=master)](https://coveralls.io/github/slimphp/Slim-Skeleton?branch=master)
+## Requerimientos tecnicos 
+* PHP 8.2.7
+* MariaDB 10.4
+* PhpMyAdmin
+* Composer Version 2.5.
 
-Use this skeleton application to quickly setup and start working on a new Slim Framework 4 application. This application uses the latest Slim 4 with Slim PSR-7 implementation and PHP-DI container implementation. It also uses the Monolog logger.
+## Modo Desarrollo docker
 
-This skeleton application was built for Composer. This makes setting up a new Slim Framework application quick and easy.
+Primero debemos preparar el entorno de docker para que tenga los recursos e imagenes necesarias de contenedor.
 
-## Install the Application
+`docker compose pull`
+Esto descarga las imagenes necesarias para el funcionamiento del micro servicio
 
-Run this command from the directory in which you want to install your new Slim Framework application. You will require PHP 7.4 or newer.
+`docker compose build`
+Esto compila los servicios necesarios para correr el codigo fuente.
 
-```bash
-composer create-project slim/slim-skeleton [my-app-name]
-```
+`docker compose up -d`
+Para levantar los servicios de desarrollo.
 
-Replace `[my-app-name]` with the desired directory name for your new application. You'll want to:
+Haciendo esto inmediatamente se levantan 3 servicios necesarios para el funcionamiento del api estos son **MariaDB** **PhpMyAdmin** **Slim**
 
-* Point your virtual host document root to your new application's `public/` directory.
-* Ensure `logs/` is web writable.
+Los servicios estan interconectados desde el codigo fuente y no es necesario hacer nada mas para que funcione correctamente desde docker en modo desarrollo.
 
-To run the application in development, you can run these commands 
-
-```bash
-cd [my-app-name]
-composer start
-```
-
-Or you can use `docker-compose` to run the app with `docker`, so you can run these commands:
-```bash
-cd [my-app-name]
-docker-compose up -d
-```
-After that, open `http://localhost:8080` in your browser.
-
-Run this command in the application directory to run the test suite
-
-```bash
-composer test
-```
-
-That's it! Now go build something cool.
