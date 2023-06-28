@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Infrastructure\Persistence\User;
 
-use App\Domain\User\User;
+use App\Application\Entity\CertificationEntity;
+use App\Entity;
 use App\Domain\User\UserNotFoundException;
 use App\Infrastructure\Persistence\User\InMemoryUserRepository;
 use Tests\TestCase;
 
-class InMemoryUserRepositoryTest extends TestCase
+class InSqlCertificationRepositoryTest extends TestCase
 {
     public function testFindAll()
     {
-        $user = new User(1, 'bill.gates', 'Bill', 'Gates');
+        $user = new CertificationEntity(1, 'bill.gates', 'Bill', 'Gates');
 
         $userRepository = new InMemoryUserRepository([1 => $user]);
 
