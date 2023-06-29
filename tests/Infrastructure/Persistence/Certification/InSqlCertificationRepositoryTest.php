@@ -1,13 +1,13 @@
 <?php
+
 declare(strict_types=1);
+
+namespace Tests;
+
 use App\Application\Repository\CertificationRepository;
 use PHPUnit\Framework\TestCase;
 use App\Application\Exceptions\CertificationNotFoundException;
 
-/**
- * @uses CertificationRepository 
- * (optional)@covers CertificationRepository::__construct
- */
 final class InSqlCertificationRepositoryTest extends TestCase
 {
     private $db;
@@ -26,7 +26,7 @@ final class InSqlCertificationRepositoryTest extends TestCase
         $this->db = new \PDO($dsn, $username, $password);
         $this->repoCertificado = new CertificationRepository($this->db);
         $this->mockData = [
-            array(
+            [
                 "id" => "2cb8b1ad-15c0-11ee-9544-0242ac150002",
                 0 => "2cb8b1ad-15c0-11ee-9544-0242ac150002",
                 "documento_identidad" => "111111",
@@ -41,8 +41,8 @@ final class InSqlCertificationRepositoryTest extends TestCase
                 5 => "2023-06-28 15:36:16",
                 "evento_id" => 1,
                 6 => 1
-            ),
-            array(
+            ],
+            [
                 "id" => "2e180f3b-15c3-11ee-9544-0242ac150002",
                 0 => "2e180f3b-15c3-11ee-9544-0242ac150002",
                 "documento_identidad" => "222222",
@@ -57,8 +57,8 @@ final class InSqlCertificationRepositoryTest extends TestCase
                 5 => "2023-06-28 15:57:47",
                 "evento_id" => 1,
                 6 => 1
-            ),
-            array(
+            ],
+            [
                 "id" => "8168ff5a-15c4-11ee-9544-0242ac150002",
                 0 => "8168ff5a-15c4-11ee-9544-0242ac150002",
                 "documento_identidad" => "333333",
@@ -73,7 +73,7 @@ final class InSqlCertificationRepositoryTest extends TestCase
                 5 => "2023-06-28 16:07:16",
                 "evento_id" => 1,
                 6 => 1
-            )
+            ]
         ];
     }
 
@@ -87,7 +87,10 @@ final class InSqlCertificationRepositoryTest extends TestCase
 
     public function testGetCertId()
     {
-        $this->assertEquals($this->mockData[0]["id"], $this->repoCertificado->checkAndGetCert($this->mockData[0]["id"])->getId());
+        $this->assertEquals(
+            $this->mockData[0]["id"],
+            $this->repoCertificado->checkAndGetCert($this->mockData[0]["id"])->getId()
+        );
     }
     public function testGetCertificationNotFoundException()
     {

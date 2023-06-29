@@ -7,5 +7,6 @@ namespace App\Application\Exceptions;
  *
  * @author David Castillo
  */
-class CertificationNotFoundException extends \Exception {
+class CertificationNotFoundException extends \Exception
+{
 }

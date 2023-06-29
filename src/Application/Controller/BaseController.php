@@ -27,5 +27,4 @@ abstract class BaseController
 
         return $response->withJson($result, $code, JSON_PRETTY_PRINT);
     }
-
 }

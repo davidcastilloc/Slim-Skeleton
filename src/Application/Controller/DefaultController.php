@@ -58,5 +58,4 @@ final class DefaultController extends BaseController
             'notes' => count($noteService->getAll()),
         ];
     }
-
 }
