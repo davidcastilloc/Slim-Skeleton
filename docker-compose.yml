@@ -23,6 +23,7 @@ services:
   slim:
       build: ./docker/slim
       working_dir: /var/www
+      tty: true
       command: php -S 0.0.0.0:8080 -t public
       environment:
         docker: "true"
@@ -32,7 +33,10 @@ services:
         - .:/var/www
         - logs:/var/www/logs
   composer:
-      image: composer
+      image: composer:1.9.3
+      environment:
+        - COMPOSER_CACHE_DIR=/app/.cache/composer
       volumes:
-        - .:/app/
-      command: install
+        - .:/app
+      restart: never
+    # NEW IN THIS SECTION!!!

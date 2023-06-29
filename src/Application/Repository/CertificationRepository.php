@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace App\Application\Repository;
 
 use App\Application\Entity\CertificationEntity;
+use App\Application\Exceptions\CertificationNotFoundException;
 
 final class CertificationRepository extends BaseRepository
 {
-    public function checkAndGetCert(int $certId): CertificationEntity
+    public function checkAndGetCert(string $certId): CertificationEntity
     {
-        $query = 'SELECT * FROM `certification` WHERE `id` = :id';
+        $query = 'SELECT * FROM `certificacion` WHERE `id` = :id';
         $statement = $this->database->prepare($query);
         $statement->bindParam(':id', $certId);
         $statement->execute();
         $cert = $statement->fetchObject(CertificationEntity::class);
         if (! $cert) {
-           throw new \Exception("Certificado no encontrado!", 404);
+           throw new CertificationNotFoundException("Certificado no encontrado!");
         }
         return $cert;
     }
@@ -26,7 +27,7 @@ final class CertificationRepository extends BaseRepository
      */
     public function getCerts(): array
     {
-        $query = 'SELECT * FROM `certification` ORDER BY `id`';
+        $query = 'SELECT * FROM `certificacion` ORDER BY `id`';
         $statement = $this->database->prepare($query);
         $statement->execute();
         return (array) $statement->fetchAll();
@@ -59,7 +60,7 @@ final class CertificationRepository extends BaseRepository
         $statement->execute();
         return $certificate;
     }
-
+/* 
     public function updateCert(CertificationEntity $certificate): CertificationEntity
     {
         $query = '
@@ -87,11 +88,11 @@ final class CertificationRepository extends BaseRepository
         $statement->execute();
 
         return $this->checkAndGetCert((int) $id);
-    }
+    } */
 
     public function deleteCert(int $certId): void
     {
-        $query = 'DELETE FROM `certification` WHERE `id` = :id';
+        $query = 'DELETE FROM `certificacion` WHERE `id` = :id';
         $statement = $this->database->prepare($query);
         $statement->bindParam(':id', $certId);
         $statement->execute();
