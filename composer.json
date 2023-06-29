@@ -58,6 +58,7 @@
 	},
 	"scripts" : {
 		"start" : "php -S localhost:8080 -t public",
-		"test" : "docker compose run slim phpunit -v  tests"
+		"test" : "docker compose run slim phpunit -v  tests",
+		"phpcs": "docker compose run slim vendor/bin/phpcs"
 	}
 }

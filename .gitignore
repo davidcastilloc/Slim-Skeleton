@@ -19,3 +19,4 @@ composer.phar
 composer.lock
 vendor/
 var/
+*.cache

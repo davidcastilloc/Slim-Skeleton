@@ -36,7 +36,6 @@ final class DefaultController extends BaseController
         $status = [
             'stats' => $this->getDbStats(),
             'MySQL' => 'OK',
-            'Redis' => $this->checkRedisConnection(),
             'version' => self::API_VERSION,
             'timestamp' => time(),
         ];
@@ -60,16 +59,4 @@ final class DefaultController extends BaseController
         ];
     }
 
-    private function checkRedisConnection(): string
-    {
-        $redis = 'Disabled';
-        if (self::isRedisEnabled() === true) {
-            $redisService = $this->container->get('redis_service');
-            $key = $redisService->generateKey('test:status');
-            $redisService->set($key, new \stdClass());
-            $redis = 'OK';
-        }
-
-        return $redis;
-    }
 }

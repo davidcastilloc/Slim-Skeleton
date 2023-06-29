@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Actions;
 
-use App\Domain\DomainException\DomainRecordNotFoundException;
+use App\Application\Exceptions\CertificationNotFoundException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
@@ -38,13 +38,13 @@ abstract class Action
 
         try {
             return $this->action();
-        } catch (DomainRecordNotFoundException $e) {
+        } catch (CertificationNotFoundException $e) {
             throw new HttpNotFoundException($this->request, $e->getMessage());
         }
     }
 
     /**
-     * @throws DomainRecordNotFoundException
+     * @throws CertificationNotFoundException
      * @throws HttpBadRequestException
      */
     abstract protected function action(): Response;

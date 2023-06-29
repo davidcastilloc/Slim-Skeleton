@@ -7,84 +7,62 @@ namespace App\Application\Entity;
 final class CertificationEntity
 {
     private string $id;
+    private string $documentoIdentidad;
+    private string $codAsistente;
+    private string $nombreCompleto;
+    private string $tipoParticipacion;
+    private int $eventoId;
 
-    private string $documento_identidad;
-
-    private string $cod_asistente;
-
-    private string $nombre_completo;
-
-    private string $tipo_participacion;
-
-    private int $evento_id;
-
-    //Este constructor sirve para los test ._.
-    
     public function getId(): string
     {
         return $this->id;
     }
-
-    public function getDocumento_identidad(): string
+    public function getDocumentoIdentidad(): string
     {
-        return $this->documento_identidad;
+        return $this->documentoIdentidad;
     }
-
-    public function getCod_asistente(): string
+    public function getCodAsistente(): string
     {
-        return $this->cod_asistente;
+        return $this->codAsistente;
     }
-
-    public function getNombre_completo(): string
+    public function getNombreCompleto(): string
     {
-        return $this->nombre_completo;
+        return $this->nombreCompleto;
     }
-
     public function getTipoParticipacion(): string
     {
-        return $this->tipo_participacion;
+        return $this->tipoParticipacion;
     }
-
     public function getEventoId(): int
     {
-        return $this->evento_id;
+        return $this->eventoId;
     }
-
-
     public function setId(string $id): void
     {
         $this->id = $id;
     }
-
-    public function setDocumento_identidad(string $documento_identidad): void
+    public function setDocumentoIdentidad(string $documentoIdentidad): void
     {
-        $this->documento_identidad = $documento_identidad;
+        $this->documentoIdentidad = $documentoIdentidad;
     }
-
-    public function setCod_asistente(string $cod_asistente): void
+    public function setCodAsistente(string $codAsistente): void
     {
-        $this->cod_asistente = $cod_asistente;
+        $this->codAsistente = $codAsistente;
     }
-
-    public function setNombre_completo(string $nombre_completo): void
+    public function setNombreCompleto(string $nombreCompleto): void
     {
-        $this->nombre_completo = $nombre_completo;
+        $this->nombreCompleto = $nombreCompleto;
     }
-
-    public function setTipoParticipacion(string $tipo_participacion): void
+    public function setTipoParticipacion(string $tipoParticipacion): void
     {
-        $this->tipo_participacion = $tipo_participacion;
+        $this->tipoParticipacion = $tipoParticipacion;
     }
-
-
-    public function setEventoId(int $evento_id): void
+    public function setEventoId(int $eventoId): void
     {
-        $this->evento_id = $evento_id;
+        $this->eventoId = $eventoId;
     }
-
     public function toJson(): object
     {
         return json_decode((string) json_encode(get_object_vars($this)), false);
     }
-
 }

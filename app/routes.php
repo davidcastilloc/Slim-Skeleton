@@ -29,7 +29,7 @@ return function (App $app) {
         $data = $request->getParsedBody();
         $db = new CertificationRepository($database);
         $nombre_certificado = $db->checkAndGetCert(
-            $data["id"])->getNombre_completo();
+            $data["id"])->getNombreCompleto();
         $generador->generate($nombre_certificado);
     });
 
@@ -38,9 +38,9 @@ return function (App $app) {
         $data = $request->getParsedBody();
         $r_certification = new CertificationRepository($db);
         $e_certificado = new CertificationEntity();
-        $e_certificado->setCod_asistente($data["cod_asistente"]);
-        $e_certificado->setDocumento_identidad($data["documento_identidad"]);
-        $e_certificado->setNombre_completo($data["nombre_completo"]);
+        $e_certificado->setCodAsistente($data["cod_asistente"]);
+        $e_certificado->setDocumentoIdentidad($data["documento_identidad"]);
+        $e_certificado->setNombreCompleto($data["nombre_completo"]);
         $e_certificado->setTipoParticipacion($data["tipo_participacion"]);
         $e_certificado->setEventoId($data["evento_id"]);
         $r_certification->createCert($e_certificado);
