@@ -1,4 +1,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/asonaphs/public_html/api-asonap
-    - /bin/cp -R public/ $DEPLOYPATH
+    - /bin/cp -R . $DEPLOYPATH
