@@ -1,4 +1,5 @@
 deployment:
   tasks:
+    - export DEPLOYPATH=/home/asonaphs/public_html/api-asonap
     - composer install
-    - /bin/cp -a /home/asonaphs/repositories/api-asonap/public /home/asonaphs/public_html/api-asonap
+    - /bin/rsync -av public/ $DEPLOYPATH
