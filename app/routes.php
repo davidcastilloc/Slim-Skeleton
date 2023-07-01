@@ -6,11 +6,12 @@ use Slim\App;
 use App\Application\Controller\Certificados\GenerarPdf;
 use App\Application\Repository\CertificationRepository;
 use App\Application\Entity\CertificationEntity;
+use App\Application\Controller\DefaultController;
 
 return function (App $app) {
     $app->get('/', function ($request, $response, array $args) {
-        $response->getBody()->write("Hola soy la api");
-        return $response;
+        $defaultController = new DefaultController();
+        return $defaultController->getHelp($request, $response);
     });
 
     $app->get('/validar', function ($request, $response, array $args) {

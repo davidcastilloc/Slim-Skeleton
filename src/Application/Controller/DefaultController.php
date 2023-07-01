@@ -2,60 +2,48 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Application\Controller;
 
-use Slim\Http\Request;
-use Slim\Http\Response;
+use App\Application\Controller\BaseController;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class DefaultController extends BaseController
 {
-    private const API_VERSION = '2.21.0';
+    private const API_VERSION = '1.0.0';
 
-    public function getHelp(Request $request, Response $response): Response
+    public function __invoke(Request $request, Response $response, $args)
     {
-        $url = $this->container->get('settings')['app']['domain'];
+        // Lógica específica del controlador UserController
+        // Llamar a la lógica común del BaseController
+        parent::__invoke($request, $response, $args);
+    }
+
+    public function getHelp($request, $response)
+    {
         $endpoints = [
-            'tasks' => $url . '/api/v1/tasks',
-            'users' => $url . '/api/v1/users',
-            'notes' => $url . '/api/v1/notes',
-            'docs' => $url . '/docs/index.html',
-            'status' => $url . '/status',
-            'this help' => $url . '',
+            'certificados' =>  'certificados',
+            'eventos' =>  'eventos',
+            'docs' =>  'docs/',
+            'status' =>  'status',
+            'Ayuda' =>  '',
         ];
         $message = [
             'endpoints' => $endpoints,
             'version' => self::API_VERSION,
             'timestamp' => time(),
         ];
-
         return $this->jsonResponse($response, 'success', $message, 200);
     }
 
-    public function getStatus(Request $request, Response $response): Response
+    public function getStatus($request, $response)
     {
         $status = [
-            'stats' => $this->getDbStats(),
             'MySQL' => 'OK',
             'version' => self::API_VERSION,
             'timestamp' => time(),
         ];
 
         return $this->jsonResponse($response, 'success', $status, 200);
-    }
-
-    /**
-     * @return array<int>
-     */
-    private function getDbStats(): array
-    {
-        $taskService = $this->container->get('task_service');
-        $userService = $this->container->get('find_user_service');
-        $noteService = $this->container->get('find_note_service');
-
-        return [
-            'tasks' => count($taskService->getAllTasks()),
-            'users' => count($userService->getAll()),
-            'notes' => count($noteService->getAll()),
-        ];
     }
 }

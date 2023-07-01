@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Application\Controller;
 
-use Slim\Container;
-use Slim\Http\Response;
+use Psr\Http\Message\ResponseInterface as Response;
 
 abstract class BaseController
 {
-    public function __construct(protected Container $container)
+    public function __construct()
     {
     }
 
@@ -24,7 +23,9 @@ abstract class BaseController
             'status' => $status,
             'message' => $message,
         ];
-
-        return $response->withJson($result, $code, JSON_PRETTY_PRINT);
+        $payload = json_encode($result);
+        $response->getBody()->write($payload);
+        return $response
+        ->withHeader('Content-Type', 'application/json');
     }
 }
