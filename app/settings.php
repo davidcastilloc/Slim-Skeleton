@@ -23,10 +23,10 @@ return function (ContainerBuilder $containerBuilder) {
                 ],
                  "db" => [
                     'driver' => 'mysql',
-                    'host' => 'mariadb',
-                    'username' => 'root',
-                    'database' => 'db_asonap',
-                    'password' => 'qwerty',
+                    'database' => 'asonaphs_sgd',
+                    'host' => isset($_ENV['docker']) ? 'mariadb' : "localhost",
+                    'username' => isset($_ENV['docker']) ? 'root' : "asonaphs_sgd",
+                    'password' => isset($_ENV['docker']) ? 'qwerty' : "asonaphs_sgd912939123912939",
                     'charset' => 'utf8mb4',
                     'collation' => 'utf8mb4_unicode_ci',
                     'flags' => [

@@ -8,32 +8,29 @@ use App\Application\Repository\CertificationRepository;
 use App\Application\Entity\CertificationEntity;
 
 return function (App $app) {
-    $app->get('/', function ($request, $response, array $args) { 
-      
+    $app->get('/', function ($request, $response, array $args) {
+        $response->getBody()->write("Hola soy la api");
+        return $response;
     });
 
     $app->get('/validar', function ($request, $response, array $args) {
         $database = $this->get(PDO::class);
-        $db= New CertificationRepository($database);
+        $db = new CertificationRepository($database);
         $data = $request->getParsedBody();
-        $response->getBody()->write(
-            json_encode(
-                $db->checkAndGetCert(
-                    $data["id"])->toJson()));
+        $response->getBody()->write(json_encode($db->checkAndGetCert($data["id"])->toJson()));
         return $response->withHeader('Content-Type', 'application/json');
     });
 
-    $app->post('/generar', function($request, $response, array $args) {
+    $app->post('/generar', function ($request, $response, array $args) {
         $database = $this->get(PDO::class);
         $generador = new GenerarPdf();
         $data = $request->getParsedBody();
         $db = new CertificationRepository($database);
-        $nombre_certificado = $db->checkAndGetCert(
-            $data["id"])->getNombreCompleto();
+        $nombre_certificado = $db->checkAndGetCert($data["id"])->getNombreCompleto();
         $generador->generate($nombre_certificado);
     });
 
-    $app->post('/crear', function($request, $response, array $args) {
+    $app->post('/crear', function ($request, $response, array $args) {
         $db = $this->get(PDO::class);
         $data = $request->getParsedBody();
         $r_certification = new CertificationRepository($db);
