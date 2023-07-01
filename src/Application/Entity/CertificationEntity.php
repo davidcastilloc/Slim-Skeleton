@@ -12,6 +12,7 @@ final class CertificationEntity
     private string $nombreCompleto;
     private string $tipoParticipacion;
     private int $eventoId;
+    private string $timestamp;
 
     public function getId(): string
     {
