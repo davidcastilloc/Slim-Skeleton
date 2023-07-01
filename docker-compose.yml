@@ -33,10 +33,10 @@ services:
         - .:/var/www
         - logs:/var/www/logs
   composer:
-      image: composer:1.9.3
+      image: composer
       environment:
         - COMPOSER_CACHE_DIR=/app/.cache/composer
       volumes:
         - .:/app
-      restart: never
+      restart: no
     # NEW IN THIS SECTION!!!
