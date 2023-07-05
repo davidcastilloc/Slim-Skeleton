@@ -22,12 +22,12 @@ return function (App $app) {
         return $response->withHeader('Content-Type', 'application/json');
     });
 
-    $app->post('/generar', function ($request, $response, array $args) {
+    $app->get('/generar/{id}', function ($request, $response, array $args) {
         $database = $this->get(PDO::class);
         $generador = new GenerarPdf();
         $data = $request->getParsedBody();
         $db = new CertificationRepository($database);
-        $nombre_certificado = $db->checkAndGetCert($data["id"])->getNombreCompleto();
+        $nombre_certificado = $db->checkAndGetCert($args['id'])->getNombreCompleto();
         $generador->generate($nombre_certificado);
     });
 
