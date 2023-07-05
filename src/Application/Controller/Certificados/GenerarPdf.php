@@ -20,8 +20,15 @@ class GenerarPdf extends \tFPDF
         parent::__construct($orientation, $unit, $size);
     }
 
-    public function generate($nombre_certificado = 'Nombre Completo En Display', $template = 'certificado.jpg')
+    public function generate()
     {
+        $this->Output('certificado', 'I');
+    }
+
+    public function agregarCertificado(
+        $nombre_certificado = 'Nombre Completo En Display',
+        $template = 'certificado.jpg'
+    ) {
         $this->SetTextColor(0, 0, 0);
         $this->AddPage();
         $this->Image($template, 0, 0, 297, 210, 'JPEG');
@@ -32,6 +39,5 @@ class GenerarPdf extends \tFPDF
         $this->Text(210, 147, 5);
         $this->SetFont('helvetica', 'B', 15);
         $this->Text(230, 147, 5);
-        $this->Output('certificado', 'I');
     }
 }

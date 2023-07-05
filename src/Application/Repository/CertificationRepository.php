@@ -33,6 +33,15 @@ final class CertificationRepository extends BaseRepository
         return (array) $statement->fetchAll();
     }
 
+    public function getCertsByDocumentoIdentidad(string $documentoIdentidad): array
+    {
+        $query = 'SELECT * FROM `certificacion` WHERE `documentoIdentidad` = :documentoIdentidad ORDER BY `timestamp`' ;
+        $statement = $this->database->prepare($query);
+        $statement->bindParam(':documentoIdentidad', $documentoIdentidad);
+        $statement->execute();
+        return (array) $statement->fetchAll();
+    }
+
     public function createCert(CertificationEntity $certificate): CertificationEntity
     {
         $query = '

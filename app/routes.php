@@ -22,13 +22,24 @@ return function (App $app) {
         return $response->withHeader('Content-Type', 'application/json');
     });
 
+    $app->get('/getallcertsbyid/{documentodeidentidad}', function ($request, $response, array $args) {
+        $database = $this->get(PDO::class);
+        $rcert = new CertificationRepository($database);
+        $generador = new GenerarPdf();
+        $result = $rcert->getCertsByDocumentoIdentidad($args["documentodeidentidad"]);
+        foreach ($result as $key => $certificado) {
+            $generador->agregarCertificado($certificado["nombreCompleto"]);
+        }
+        $generador->generate();
+    });
+
     $app->get('/generar/{id}', function ($request, $response, array $args) {
         $database = $this->get(PDO::class);
         $generador = new GenerarPdf();
-        $data = $request->getParsedBody();
         $db = new CertificationRepository($database);
         $nombre_certificado = $db->checkAndGetCert($args['id'])->getNombreCompleto();
-        $generador->generate($nombre_certificado);
+        $generador->agregarCertificado($nombre_certificado);
+        $generador->generate();
     });
 
     $app->post('/crear', function ($request, $response, array $args) {
