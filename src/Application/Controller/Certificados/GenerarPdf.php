@@ -27,17 +27,19 @@ class GenerarPdf extends \tFPDF
 
     public function agregarCertificado(
         $nombre_certificado = 'Nombre Completo En Display',
+        $tipo_participacion = 'Asistente',
         $template = 'certificado.jpg'
     ) {
+        $this->SetTitle("ASONAP " . $nombre_certificado);
+        $this->SetCreator("ASONAP");
+        $this->SetAuthor("ASONAP");
         $this->SetTextColor(0, 0, 0);
         $this->AddPage();
         $this->Image($template, 0, 0, 297, 210, 'JPEG');
         $this->AddFont('DejaVu', '', 'DejaVuSansCondensed.ttf', true);
+        $this->SetFont('DejaVu', '', 15);
+        $this->Text(56, 128, $tipo_participacion);
         $this->SetFont('DejaVu', '', 35);
         $this->Text(80, 105, $nombre_certificado);
-        $this->SetFont('helvetica', 'B', 15);
-        $this->Text(210, 147, 5);
-        $this->SetFont('helvetica', 'B', 15);
-        $this->Text(230, 147, 5);
     }
 }

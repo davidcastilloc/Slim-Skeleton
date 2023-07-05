@@ -28,7 +28,7 @@ return function (App $app) {
         $generador = new GenerarPdf();
         $result = $rcert->getCertsByDocumentoIdentidad($args["documentodeidentidad"]);
         foreach ($result as $key => $certificado) {
-            $generador->agregarCertificado($certificado["nombreCompleto"]);
+            $generador->agregarCertificado($certificado["nombreCompleto"], $certificado["tipoParticipacion"]);
         }
         $generador->generate();
     });
