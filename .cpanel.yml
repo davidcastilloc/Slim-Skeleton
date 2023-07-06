@@ -1,4 +1,5 @@
 deployment:
   tasks:
+    - /home/asonaphs/bin/composer.phar install --no-dev
     - export DEPLOYPATH=/home/asonaphs/public_html/api-asonap
     - /bin/cp -R . $DEPLOYPATH
