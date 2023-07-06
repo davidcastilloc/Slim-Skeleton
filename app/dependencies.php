@@ -9,7 +9,8 @@ use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-    
+use App\Application\Controller\DefaultController;
+
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
         LoggerInterface::class => function (ContainerInterface $c) {
@@ -40,5 +41,9 @@ return function (ContainerBuilder $containerBuilder) {
         },
     ]);
 
+    $containerBuilder->addDefinitions([
+        DefaultController::class => function (ContainerInterface $c) {
+            return new DefaultController($c);
+        }
+    ]);
 };
-

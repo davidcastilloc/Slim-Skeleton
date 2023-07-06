@@ -20,14 +20,15 @@
 		}
 	],
 	"require" : {
-		"php" : "^7.4 || ^8.0",
-		"fpdf/fpdf" : "^1.85",
-		"setasign/tfpdf" : "1.33",
-		"ext-json" : "*",
-		"monolog/monolog" : "^2.9",
-		"php-di/php-di" : "^6.4",
-		"slim/psr7" : "^1.6",
-		"slim/slim" : "^4.11"
+		"php": "^7.4 || ^8.0",
+		"ext-json": "*",
+		"fpdf/fpdf": "^1.85",
+		"league/csv": "^9.0",
+		"monolog/monolog": "^2.9",
+		"php-di/php-di": "^6.4",
+		"setasign/tfpdf": "1.33",
+		"slim/psr7": "^1.6",
+		"slim/slim": "^4.11"
 	},
 	"require-dev" : {
 		"jangregor/phpstan-prophecy": "^1.0.0",

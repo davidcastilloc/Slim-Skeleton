@@ -4,12 +4,24 @@ declare(strict_types=1);
 
 namespace App\Application\Controller;
 
+use PDO;
 use Psr\Http\Message\ResponseInterface as Response;
 
 abstract class BaseController
 {
-    public function __construct()
+    protected $database;
+    protected Request $request;
+    protected Response $response;
+    protected array $args;
+
+    public function __construct(PDO $database)
     {
+        $this->database = $database;
+    }
+
+    protected function getDatabase()
+    {
+        return $this->database;
     }
 
     protected function jsonResponse(
