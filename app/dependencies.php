@@ -9,7 +9,6 @@ use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use App\Application\Controller\DefaultController;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -39,11 +38,5 @@ return function (ContainerBuilder $containerBuilder) {
             $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
             return new PDO($dsn, $username, $password);
         },
-    ]);
-
-    $containerBuilder->addDefinitions([
-        DefaultController::class => function (ContainerInterface $c) {
-            return new DefaultController($c);
-        }
     ]);
 };
