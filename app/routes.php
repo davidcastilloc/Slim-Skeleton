@@ -9,6 +9,7 @@ use App\Application\Entity\CertificationEntity;
 use App\Application\Controller\DataController;
 use App\Application\Controller\DefaultController;
 use App\Application\Exceptions\CertificationNotFoundException;
+use Slim\Exception\HttpNotFoundException;
 
 return function (App $app) {
     $app->get('/', DefaultController::class . ":getHelp");
@@ -28,8 +29,8 @@ return function (App $app) {
         $rcert = new CertificationRepository($database);
         $generador = new GenerarPdf();
         $result = $rcert->getCertsByDocumentoIdentidad($args["documentodeidentidad"]);
-        if (count($result) < 1) {
-            throw new CertificationNotFoundException("Este documento no tiene certificados registrados!");
+        if (count($result) === 0) {
+            throw new HttpNotFoundException($request, "Este documento no tiene certificados registrados!");
         }
         foreach ($result as $key => $certificado) {
             $generador->agregarCertificado($certificado["nombreCompleto"], $certificado["tipoParticipacion"]);
