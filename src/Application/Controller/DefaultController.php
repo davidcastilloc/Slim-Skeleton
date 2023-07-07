@@ -11,7 +11,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 final class DefaultController extends BaseController
 {
     private const API_VERSION = '1.0.0';
-
     public function __invoke(Request $request, Response $response, $args)
     {
         // Lógica específica del controlador UserController

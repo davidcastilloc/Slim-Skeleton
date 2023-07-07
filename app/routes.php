@@ -11,7 +11,7 @@ use App\Application\Controller\DefaultController;
 use App\Application\Exceptions\CertificationNotFoundException;
 
 return function (App $app) {
-    $app->get('/', DefaultController::class);
+    $app->get('/', DefaultController::class . ":getHelp");
 
     $app->post('/administracion/segura/importar', DataController::class . ":importData");
 
