@@ -8,6 +8,7 @@ use App\Application\Repository\CertificationRepository;
 use App\Application\Entity\CertificationEntity;
 use App\Application\Controller\DataController;
 use App\Application\Controller\DefaultController;
+use App\Application\Exceptions\CertificationNotFoundException;
 
 return function (App $app) {
     $app->get('/', DefaultController::class);
@@ -27,6 +28,9 @@ return function (App $app) {
         $rcert = new CertificationRepository($database);
         $generador = new GenerarPdf();
         $result = $rcert->getCertsByDocumentoIdentidad($args["documentodeidentidad"]);
+        if (count($result) < 1) {
+            throw new CertificationNotFoundException("Este documento no tiene certificados registrados!");
+        }
         foreach ($result as $key => $certificado) {
             $generador->agregarCertificado($certificado["nombreCompleto"], $certificado["tipoParticipacion"]);
         }
