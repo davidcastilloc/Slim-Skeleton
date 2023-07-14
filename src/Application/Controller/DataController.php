@@ -39,7 +39,7 @@ class DataController extends BaseController
             $uploadedFile->moveTo("uploads/$newFilename");
             //aqui procesamos el csv
             //error_log(print_r($this->processCsv($newFilename)));
-            $certificadosProcesados = $this->processCsv($newFilename);
+            $certificadosProcesados = $this->processCsv($newFilename, $requestData['idEvento']);
             if ($certificadosProcesados === []) {
                 return $this->jsonResponse($response, "SUCCESS", "No se agregaron valores nuevos al csv", 200);
             }
@@ -54,7 +54,7 @@ class DataController extends BaseController
      * @throws UnavailableStream
      * @throws Exception
      */
-    private function processCsv(string $newFilename): array
+    private function processCsv(string $newFilename, string $idEvento): array
     {
         $csv = Reader::createFromPath("./uploads/$newFilename");
         $csv->setHeaderOffset(0);
@@ -75,7 +75,7 @@ class DataController extends BaseController
                 $certEntity->setCodAsistente($certificado["codAsistente"]);
                 $certEntity->setId($certificado['id']);
                 $certEntity->setDocumentoIdentidad($certificado["documentoIdentidad"]);
-                $certEntity->setEventoId($certificado["eventoId"]);
+                $certEntity->setEventoId($idEvento);
                 $certEntity->setNombreCompleto($certificado["nombreCompleto"]);
                 $certEntity->setTipoParticipacion($certificado["tipoParticipacion"]);
                 $rstCertification->createCert($certEntity);
