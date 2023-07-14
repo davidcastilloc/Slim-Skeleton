@@ -3,18 +3,15 @@
 declare(strict_types=1);
 
 use Slim\App;
-use App\Application\Controller\Certificados\GenerarPdf;
 use App\Application\Repository\CertificationRepository;
 use App\Application\Entity\CertificationEntity;
-use App\Application\Controller\DataController;
-use App\Application\Controller\DefaultController;
-use App\Application\Exceptions\CertificationNotFoundException;
+use App\Application\Controller\{Certificados\GenerarPdf, DataController, DefaultController};
 use Slim\Exception\HttpNotFoundException;
 
 return function (App $app) {
     $app->get('/', DefaultController::class . ":getHelp");
 
-    $app->post('/administracion/segura/importar', DataController::class . ":importData");
+    $app->post('/administracion/segura/importar', DataController::class);
 
     $app->get('/validar', function ($request, $response, array $args) {
         $database = $this->get(PDO::class);
@@ -24,16 +21,17 @@ return function (App $app) {
         return $response->withHeader('Content-Type', 'application/json');
     });
 
-    $app->get('/getallcertsbyid/{documentodeidentidad}', function ($request, $response, array $args) {
+    $app->get('/getallcertsbyid/{documentodeidentidad}/{eventId}', function ($request, $response, array $args) {
         $database = $this->get(PDO::class);
         $rcert = new CertificationRepository($database);
         $generador = new GenerarPdf();
-        $result = $rcert->getCertsByDocumentoIdentidad($args["documentodeidentidad"]);
+        $result = $rcert->getCertsByDocumentIdAndEventId($args["documentodeidentidad"],$args["eventId"]);
         if (count($result) === 0) {
             throw new HttpNotFoundException($request, "Este documento no tiene certificados registrados!");
         }
         foreach ($result as $key => $certificado) {
-            $generador->agregarCertificado($certificado["nombreCompleto"], $certificado["tipoParticipacion"]);
+            $generador->agregarCertificado($certificado["nombreCompleto"], $certificado["tipoParticipacion"],
+                $certificado["plantillaCertificado"]);
         }
         $generador->generate();
     });
@@ -56,9 +54,63 @@ return function (App $app) {
         $e_certificado->setDocumentoIdentidad($data["documento_identidad"]);
         $e_certificado->setNombreCompleto($data["nombre_completo"]);
         $e_certificado->setTipoParticipacion($data["tipo_participacion"]);
-        $e_certificado->setEventoId($data["evento_id"]);
+        $e_certificado->setplantillaCertificado($data["evento_id"]);
         $r_certification->createCert($e_certificado);
         $response->getBody()->write(json_encode($e_certificado->toJson()));
         return $response;
+    });
+
+    $app->get('/getEventos', function ($request, $response, array $args) {
+        $database = $this->get(PDO::class);
+        $query = 'SELECT * FROM `evento` ORDER BY `id`';
+        $statement = $database->prepare($query);
+        $statement->execute();
+        $response->getBody()->write(json_encode($statement->fetchAll()));
+        return $response->withHeader('Content-Type', 'application/json');
+    });
+
+    $app->post('/uploadPlantilla', function ($request, $response, $args) {
+        $uploadedFiles = $request->getUploadedFiles();
+        $uploadedFile = $uploadedFiles['plantilla'];
+        //Agregar fecha y hora actual al nombre del archivo
+        $currentDateTime = new DateTime();
+        $formattedDateTime = $currentDateTime->format('Ymd_His');
+        $newFilename = $formattedDateTime . '_' . $uploadedFile->getClientFilename();
+        $uploadedFile->moveTo("uploads/plantilla/$newFilename");
+        if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+            $result = [
+                'code' => 200,
+                'status' => "GOOD",
+                'message' => "Archivo subido exitosamente.",
+                'nombreArchivo' => $newFilename
+            ];
+            $response->getBody()->write(json_encode($result));
+        } else {
+            $result = [
+                'code' => 500,
+                'status' => "BAD",
+                'message' => "Error al subir el archivo.",
+                'nombreArchivo' => $newFilename
+            ];
+            $response->getBody()->write(json_encode($result));
+        }
+        return $response->withHeader('Content-Type', 'application/json');
+    });
+
+    $app->post('/crearEvento', function ($request, $response, array $args) {
+        $newEvento = $request->getParsedBody();
+        $database = $this->get(PDO::class);
+        $query = 'INSERT INTO `evento`(`nombre`, `fecha`, `lugar`,
+        `asistenciaRequerida`, `plantillaCertificado`)
+        VALUES(:nombre, :fecha, :lugar, :asistenciaRequerida, :plantillaCertificado)';
+        $statement = $database->prepare($query);
+        $statement->bindParam(':nombre', $newEvento["nombre"]);
+        $statement->bindParam(':fecha', $newEvento["fecha"]);
+        $statement->bindParam(':lugar', $newEvento["lugar"]);
+        $statement->bindParam(':asistenciaRequerida', $newEvento["asistenciaRequerida"]);
+        $statement->bindParam(':plantillaCertificado', $newEvento["plantillaCertificado"]);
+        $statement->execute();
+        $response->getBody()->write(json_encode($newEvento));
+        return $response->withHeader('Content-Type', 'application/json');
     });
 };

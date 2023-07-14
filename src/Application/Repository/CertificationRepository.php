@@ -33,11 +33,18 @@ final class CertificationRepository extends BaseRepository
         return (array) $statement->fetchAll();
     }
 
-    public function getCertsByDocumentoIdentidad(string $documentoIdentidad): array
+    public function getCertsByDocumentIdAndEventId(string $documentoIdentidad, string $eventoId): array
     {
-        $query = 'SELECT * FROM `certificacion` WHERE `documentoIdentidad` = :documentoIdentidad ORDER BY `timestamp`' ;
+        $query = 'SELECT *,
+       evento.plantillaCertificado
+FROM certificacion
+         JOIN evento ON certificacion.eventoId = evento.id
+WHERE certificacion.documentoIdentidad = :documentoIdentidad and certificacion.eventoId = :eventoId
+  AND certificacion.eventoId = evento.id
+ORDER BY `timestamp`;';
         $statement = $this->database->prepare($query);
         $statement->bindParam(':documentoIdentidad', $documentoIdentidad);
+        $statement->bindParam(':eventoId', $eventoId);
         $statement->execute();
         return (array) $statement->fetchAll();
     }

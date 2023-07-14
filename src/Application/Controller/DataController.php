@@ -2,20 +2,29 @@
 
 namespace App\Application\Controller;
 
-use App\Application\Entity\CertificationEntity;
-use App\Application\Repository\CertificationRepository;
+use App\{Application\Entity\CertificationEntity,
+    Application\Repository\CertificationRepository,
+    Application\Exceptions\CertificationNotFoundException};
 use DateTime;
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\{Http\Message\ResponseInterface as Response, Http\Message\ServerRequestInterface as Request};
+use League\Csv\Exception;
 use League\Csv\Reader;
-use App\Application\Exceptions\CertificationNotFoundException;
+use League\Csv\UnavailableStream;
 
 class DataController extends BaseController
 {
-    public function importData(Request $request, Response $response, array $args): Response
+    /**
+     * @throws UnavailableStream
+     * @throws Exception
+     */
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         $uploadedFiles = $request->getUploadedFiles();
+        $requestData = $request->getParsedBody();
         $uploadedFile = $uploadedFiles['csv_file'];
+        if (empty($requestData['idEvento'])) {
+            return $this->jsonResponse($response, "VALIDATION", "Debe seleccionar el evento!", 200);
+        }
         if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
             $filename = $uploadedFile->getClientFilename();
             //Comprobamos que es un csv
@@ -30,25 +39,29 @@ class DataController extends BaseController
             $uploadedFile->moveTo("uploads/$newFilename");
             //aqui procesamos el csv
             //error_log(print_r($this->processCsv($newFilename)));
-            $certificados_procesados = $this->processCsv($newFilename);
-            if ($certificados_procesados === []) {
+            $certificadosProcesados = $this->processCsv($newFilename);
+            if ($certificadosProcesados === []) {
                 return $this->jsonResponse($response, "SUCCESS", "No se agregaron valores nuevos al csv", 200);
             }
 
-            return $this->jsonResponse($response, "SUCCESS", $certificados_procesados, 200);
+            return $this->jsonResponse($response, "SUCCESS", $certificadosProcesados, 200);
         } else {
             return $this->jsonResponse($response, "SUCCESS", 'Error al subir el archivo CSV', 400);
         }
     }
 
+    /**
+     * @throws UnavailableStream
+     * @throws Exception
+     */
     private function processCsv(string $newFilename): array
     {
-        $csv = Reader::createFromPath("./uploads/$newFilename", "r");
+        $csv = Reader::createFromPath("./uploads/$newFilename");
         $csv->setHeaderOffset(0);
         // Lógica para importar los datos aquí
         //$response->getBody()->write('Hola');
 
-        $header = $csv->getHeader(); //returns the CSV header record
+        //$header = $csv->getHeader(); //returns the CSV header record
         $records = $csv->getRecords(); //returns all the CSV records as an Iterator object
 
         $certificados = [];
@@ -68,7 +81,7 @@ class DataController extends BaseController
                 $rstCertification->createCert($certEntity);
                 $certificados[] = $certificado;
             }
-        };
+        }
         return $certificados;
     }
 }

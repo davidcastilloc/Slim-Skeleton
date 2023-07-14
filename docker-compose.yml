@@ -6,11 +6,13 @@ volumes:
 services:
   mariadb:
     image: mariadb:10.4
-    restart: always
+    restart: no
     volumes:
       - mariadb-data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: qwerty
+    expose:
+      - 3306
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     ports:
